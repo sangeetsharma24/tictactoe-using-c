@@ -1,0 +1,969 @@
+#include<stdio.h>
+#include<string.h>
+
+//funcion prototypes
+void tic_tac_toe();
+void from_position();
+void rules();
+void run();
+void check_for_win();
+
+//<<<<variables>>>>
+
+//stores the name of player whose turn is going on
+char playername[20];
+
+//matrix which will be used to run the game
+char matrix[3][3];
+char symbol;
+int win=0;
+int position;
+int *pos;
+int accept;
+//structure to store names
+struct name
+{
+    char name1[20];
+    char name2[20];
+}s;
+
+FILE *ptr;
+
+void main()
+{
+    printf("WELCOME\n");
+
+    //TO ENTER NAMES OF PLAYERS BY PLAYERS THEMSELVES
+    printf("Enter name of player 1-\n");
+    scanf("%[^\n]%*c",s.name1);
+    printf("Enter name of player 2-\n");
+    scanf("%[^\n]%*c",s.name2);
+
+    /*
+    WE MAKE A FUNTION RUN
+    BECAUSE WE MAY NEED TO
+    USE THE FUNCTION AGAIN
+    FOR EXAMPLE IF THE PLAYERS
+    WANT TO HAVE REMATCH */
+
+    run();
+
+}
+void run()
+{
+    printf("Enter 1 to play tic tac toe, Enter 2 to know rules\n");
+    int choice;
+    scanf("%d",&choice);
+    switch(choice)
+    {
+        case 1:
+        tic_tac_toe();
+        break;
+        case 2:
+        rules();
+        break;
+        default:
+        {
+            printf("wrong input");
+
+            /*
+            IF WE INPUT ANYTHING
+            OTHER THAN 1 OR 2 THEN
+            COPMUTER WILL AGAIN
+            TAKE INPUT BY CALLING
+            RUN FUNCTION AGAIN
+            */
+
+        run();
+        }
+
+    }
+}
+void tic_tac_toe()
+{
+    printf("...........\n");
+    printf("TIC TAC TOE");
+    for(int i=0;i<3;i++)
+    {
+        for(int j=0;j<3;j++)
+        {
+            matrix[i][j]='.';
+
+            /*
+            IT WILL INITIALIZE
+            ALL THE VALUES OF
+            MATRIX AS A
+            DOT i.e - '.'
+            */
+        }
+    }
+    printf("\nCurrent grid-\n");
+    for(int i=0;i<3;i++)
+    {
+        for(int j=0;j<3;j++)
+        {
+            printf("%c ",matrix[i][j]);
+        }
+        printf("\n");
+    }
+    printf("You have to enter position according to this grid\n");
+
+    /*
+
+    TO PRINT -
+    1 2 3
+    4 5 6
+    7 8 9
+
+    */
+
+    int from1to9=1;
+    for(int i=0;i<3;i++)
+    {
+        for(int j=0;j<3;j++)
+        {
+            printf("%d ",from1to9);
+            from1to9++;
+        }
+        printf("\n");
+    }
+
+
+    for(int i=1;i<=9;i++)
+    {
+        /*
+
+
+        SO WE RUN A LOOP FROM
+        1 TO 9. IF i IS AN ODD
+        NUMBER THEN IT WILL BE
+        FIRST PLAYER'S TURN AND
+        IF i IS A EVEN NUMBER
+        THEN IT WILL BE SECOND
+        PLAYER'S TURN
+
+
+        */
+
+        if(i%2==1)
+        {
+            symbol='O';
+        }
+        else if(i%2==0)
+        {
+            symbol='X';
+        }
+
+        /*
+
+
+        IF i IS ODD THEN
+        PLAYERNAME WILL STORE
+        FIRST PLAYER'S NAME AND
+        IF i IS ODD THE PLAYERNAME
+        WILL STORE SECOND PLAYER'S
+
+
+        NAME
+        */
+
+        if(i%2==1)
+        {
+            strcpy(playername,s.name1);
+        }
+        else if(i%2==0)
+        {
+            strcpy(playername,s.name2);
+        }
+
+        from_position();
+
+        /*
+
+
+        WE CREATED from_position
+        TO HANDLE A SITUATION WHEN
+        A PLAYER TRIES TO CHEAT i.e.
+        TRIES TO FILL A POSITION WHICH
+        IS ALREADY OCCUPIED
+
+        FOR EXAMPLE - ASSUME FIRST PLAYER OCCUPIED THE POSITION 3
+        GRID WILL BE -- | . . O |
+                        | . . . |
+                        | . . . |
+        IF SECOND PLAYER ENTER POSITION 3
+        LOGICALLY GRID SHOULD BE NOW
+                        | . . x |
+                        | . . . |
+                        | . . . |
+
+        AND THIS IS CHEATING
+
+        SO IF SECOND PLAYER ENTER POSITION 3 THEN
+        COMPUTER WILL SAY THAT YOU ARE CHEATING AND
+        WILL MAKE SURE YOU ENTER AN UNOCCUPIED
+        POSIITON BY CALLING from_function AGAIN
+        AND AGAIN UNTIL YOU ENTER A POSTION WHICH
+        IS UNOCCUPIED
+
+
+        */
+    }
+}
+void from_position()
+{
+    for(int h=0;((h<20)&&(playername[h]!='\0'));h++)
+    {
+        printf("%c",playername[h]);
+    }
+    printf(" enter your desired position\n");
+    scanf("%d",&position);
+    pos=&position;
+    int r=0;
+
+    /*
+
+    r IS INTIALLY INITIALIZED
+    TO 0 AND IF ENETERED POSITION
+    IS OCCUPIED THEN r WILL BE
+    INTIALIZED TO 1
+
+    */
+
+    switch(position)
+    {
+        case 1:
+        if(matrix[0][0]!='.')
+        {
+            r=1;
+        }
+        break;
+
+
+        case 2:
+        if(matrix[0][1]!='.')
+        {
+            r=1;
+        }
+        break;
+
+
+        case 3:
+        if(matrix[0][2]!='.')
+        {
+            r=1;
+        }
+        break;
+
+
+        case 4:
+        if(matrix[1][0]!='.')
+        {
+            r=1;
+        }
+        break;
+
+
+        case 5:
+        if(matrix[1][1]!='.')
+        {
+            r=1;
+        }
+        break;
+
+
+        case 6:
+        if(matrix[1][2]!='.')
+        {
+            r=1;
+        }
+        break;
+
+
+        case 7:
+        if(matrix[2][0]!='.')
+        {
+            r=1;
+        }
+        break;
+
+
+        case 8:
+        if(matrix[2][1]!='.')
+        {
+            r=1;
+        }
+        break;
+
+
+        case 9:
+        if(matrix[2][2]!='.')
+        {
+            r=1;
+        }
+        break;
+
+    }
+    if(r==1)
+    {
+        /*
+
+        IF r IS 1 THEN
+        IT MEANS PLAYER
+        IS CHEATING
+
+        */
+
+        printf("PLAY FAIR\nEnter correct position\n");
+        from_position();
+    }
+
+    else
+    {
+
+    /*
+
+    IF A PLAYER IS CHEATING
+    THEN ELSE CONDITION WILL
+    NOT RUN. ELSE CONDITION
+    WILL RUN ONLY WHEN
+    ENTERED POSITION IS
+    UNOCCUPIED
+
+    */
+    int check_position=0;
+    if(*pos==1)
+    {
+        check_position=1;
+    }
+
+
+    else if(*pos==2)
+    {
+        check_position=1;
+    }
+
+
+    else if(*pos==3)
+    {
+        check_position=1;
+    }
+
+
+    else if(*pos==4)
+    {
+        check_position=1;
+    }
+
+
+    else if(*pos==5)
+    {
+        check_position=1;
+    }
+
+
+    else if(*pos==6)
+    {
+        check_position=1;
+    }
+
+
+    else if(*pos==7)
+    {
+        check_position=1;
+    }
+
+
+    else if(*pos==8)
+    {
+        check_position=1;
+    }
+
+
+    else if(*pos==9)
+    {
+        check_position=1;
+    }
+
+
+    else if(check_position==0)
+    {
+        /*
+
+        check_position IS A VARIABLE
+        USED TO CHECK IF ENETERED
+        POSITION EXITS OR NOT
+        IF check_position IS 0 THEN
+        PLAYER HAS ENTERED A NUMBER
+        WHICH IS DO NOT CAME IN BETWEEN
+        0 TO 9. IF POSITION'S VALUE IS
+        IN BETWEEN 1 AND 9 THEN PROGRAM
+        RUNS FURTHER OR ELSE COMPUTER
+        ASKS PLAYER TO ENTER VALUE AGAIN
+
+        */
+
+        printf("no such position exist ,");
+        printf(" enter again \n");
+        from_position();
+    }
+
+    /*
+
+    ABOVE LINES CANN BE ALSO
+    DONE BY USING SWITCH CASE
+
+    */
+
+    if(check_position==1)
+    {
+
+        if(*pos==1)
+        {
+            matrix[0][0]=symbol;
+        }
+
+
+        if(*pos==2)
+        {
+            matrix[0][1]=symbol;
+        }
+
+
+        if(*pos==3)
+        {
+            matrix[0][2]=symbol;
+        }
+
+
+        if(*pos==4)
+        {
+            matrix[1][0]=symbol;
+        }
+
+
+        if(*pos==5)
+        {
+            matrix[1][1]=symbol;
+        }
+
+
+        if(*pos==6)
+        {
+            matrix[1][2]=symbol;
+        }
+
+
+        if(*pos==7)
+        {
+            matrix[2][0]=symbol;
+        }
+
+
+        if(*pos==8)
+        {
+            matrix[2][1]=symbol;
+        }
+
+
+        if(*pos==9)
+        {
+            matrix[2][2]=symbol;
+        }
+
+        /*
+
+
+        IF ITS FIRST PLAYER'S
+        TURN THEN SYMBOL WILL BE
+        'O' AND IF ITS SECOND
+        PLAYER'S TURN THEN SYMBOL
+        WILL BE 'X'. NOW POSITION'S
+        CHARACTER WILL BE CHANGED
+        FORM '.' TO EITHER 'O' OR 'X'
+        DEPENDING UPON WHOSE CHANCE
+        IT IS
+
+
+        */
+
+        printf("------\n");
+        int ju1to9=1;
+        for(int i=0;i<3;i++)
+        {
+            /*
+
+            TO PRINT NEW MATRIX
+            IN WHICH VALUES ARE
+            CHANGED
+
+            */
+
+            for(int j=0;j<3;j++)
+            {
+                printf("%c ",matrix[i][j]);
+            }
+            printf("   |");
+
+            /*
+
+            TO PRINT-
+
+            |   1 2 3
+            |   4 5 6
+            |   7 8 9
+
+            */
+
+            for(int lp=0;lp<3;lp++)
+            {
+                printf("%d ",ju1to9);
+                ju1to9++;
+            }
+            printf("\n");
+        }
+        printf("------\n");
+
+
+        check_for_win();
+    }
+    }
+}
+void check_for_win()
+{
+    /*
+
+
+        EVERYTIME A PLAYER ENTER A
+        VALUE , THEN COMPUTER CHECKS
+        16 CONDITIONS AND IF ANY
+        ONE OF THESE CONDITION IS TRUE
+        THEN PLAYER WHO HAVE ENTERED
+        THE LATEST VALUE WINS
+
+
+    */
+
+    //row 1
+
+    /*
+
+    @   @   @
+
+    .   .   .
+
+    .   .   .
+
+    */
+    if((matrix[0][0]=='O')&&(matrix[0][1]=='O')&&(matrix[0][2]=='O'))
+    {
+        win=1;
+    }
+
+
+    //row 2
+
+    /*
+
+    .   .   .
+
+    @   @   @
+
+    .   .   .
+
+    */
+    if((matrix[1][0]=='O')&&(matrix[1][1]=='O')&&(matrix[1][2]=='O'))
+    {
+        win=1;
+    }
+
+
+    //row 3
+
+    /*
+
+    .   .   .
+
+    .   .   .
+
+    @   @   @
+
+    */
+    if((matrix[2][0]=='O')&&(matrix[2][1]=='O')&&(matrix[2][2]=='O'))
+    {
+        win=1;
+    }
+
+
+    //column 1
+
+    /*
+
+    @   .   .
+
+    @   .   .
+
+    @   .   .
+
+    */
+    if((matrix[0][0]=='O')&&(matrix[1][0]=='O')&&(matrix[2][0]=='O'))
+    {
+        win=1;
+    }
+
+
+    //column 2
+
+    /*
+
+    .   @   .
+
+    .   @   .
+
+    .   @   .
+
+    */
+    if((matrix[0][1]=='O')&&(matrix[1][1]=='O')&&(matrix[2][1]=='O'))
+    {
+        win=1;
+    }
+
+
+    //column 3
+
+    /*
+
+    .   .   @
+
+    .   .   @
+
+    .   .   @
+
+    */
+    if((matrix[0][2]=='O')&&(matrix[1][2]=='O')&&(matrix[2][2]=='O'))
+    {
+        win=1;
+    }
+
+
+    //left diagonal
+
+    /*
+
+    @   .   .
+
+    .   @   .
+
+    .   .   @
+
+    */
+    if((matrix[0][0]=='O')&&(matrix[1][1]=='O')&&(matrix[2][2]=='O'))
+    {
+        win=1;
+    }
+
+
+    //right diagonal
+
+    /*
+
+    .   .   @
+
+    .   @   .
+
+    @   .   .
+
+    */
+    if((matrix[2][0]=='O')&&(matrix[1][1]=='O')&&(matrix[0][2]=='O'))
+    {
+        win=1;
+    }
+
+    //row 1
+
+    /*
+
+    @   @   @
+
+    .   .   .
+
+    .   .   .
+
+    */
+    if((matrix[0][0]=='X')&&(matrix[0][1]=='X')&&(matrix[0][2]=='X'))
+    {
+        win=1;
+    }
+
+
+    //row 2
+
+    /*
+
+    .   .   .
+
+    @   @   @
+
+    .   .   .
+
+    */
+    if((matrix[1][0]=='X')&&(matrix[1][1]=='X')&&(matrix[1][2]=='X'))
+    {
+        win=1;
+    }
+
+
+    //row 3
+
+    /*
+
+    .   .   .
+
+    .   .   .
+
+    @   @   @
+
+    */
+    if((matrix[2][0]=='X')&&(matrix[2][1]=='X')&&(matrix[2][2]=='X'))
+    {
+        win=1;
+    }
+
+
+    //column 1
+
+    /*
+
+    @   .   .
+
+    @   .   .
+
+    @   .   .
+
+    */
+    if((matrix[0][0]=='X')&&(matrix[1][0]=='X')&&(matrix[2][0]=='X'))
+    {
+        win=1;
+    }
+
+
+    //column 2
+
+    /*
+
+    .   @   .
+
+    .   @   .
+
+    .   @   .
+
+    */
+    if((matrix[0][1]=='X')&&(matrix[1][1]=='X')&&(matrix[2][1]=='X'))
+    {
+        win=1;
+    }
+
+
+     //column 3
+
+    /*
+
+    .   .   @
+
+    .   .   @
+
+    .   .   @
+
+    */
+    if((matrix[0][2]=='X')&&(matrix[1][2]=='X')&&(matrix[2][2]=='X'))
+    {
+        win=1;
+    }
+
+
+    //left diagonal
+
+    /*
+
+    @   .   .
+
+    .   @   .
+
+    .   .   @
+
+    */
+
+    if((matrix[0][0]=='X')&&(matrix[1][1]=='X')&&(matrix[2][2]=='X'))
+    {
+        win=1;
+    }
+
+
+
+    //right diagonal
+
+    /*
+
+    .   .   @
+
+    .   @   .
+
+    @   .   .
+
+    */
+    if((matrix[2][0]=='X')&&(matrix[1][1]=='X')&&(matrix[0][2]=='X'))
+    {
+        win=1;
+    }
+    if(win==1)
+    {
+        int ju1to9=1;
+        for(int i=0;i<3;i++)
+        {
+            for(int j=0;j<3;j++)
+            {
+                printf("%c ",matrix[i][j]);
+            }
+            printf("   |");
+            for(int lp=0;lp<3;lp++)
+            {
+                printf("%d ",ju1to9);
+                ju1to9++;
+            }
+            printf("\n");
+        }
+        for(int y=0;((y<20)&&(playername[y]!='\0'));y++)
+        {
+            printf("__");
+        }
+        printf("__\n");
+        for(int y=0;((y<20)&&(playername[y]!='\0'));y++)
+        {
+            printf("%c",playername[y]);
+        }
+
+        printf(" is the WINNER\n");
+
+
+        for(int y=0;((y<20)&&(playername[y]!='\0'));y++)
+        {
+            printf("__");
+        }
+        printf("\n\nDo you want to enter your name in the hall of fame of tic tac toe:\n");
+        printf("Press 1 for yes or 2 for NO\n");
+        scanf("%d",&accept);
+        if(accept==1)
+        {
+
+            FILE *ptr;
+        ptr=fopen("winner.txt","a+");
+        int t=0;
+        while(playername[t]!='\0')
+        {
+
+            putc(playername[t],ptr);
+            t++;
+        }
+        putc('\n',ptr);
+        fclose(ptr);
+        }
+        else
+        {
+            printf("\nEnter 1 to play AGAIN or any other number to exit:\n");
+            int re;
+            /*
+            To store the value and check user
+            want to play again or exit
+            */
+            scanf("%d",&re);
+            if(re==1)
+            {
+                run();
+            }
+            else
+            {
+                exit(0);
+            }
+        }
+        printf("__\n");
+
+        printf("\nEnter 1 to play AGAIN and or any other key to exit: \n");
+        int re;
+        /*
+        To store the value and check user
+        want to play again or exit
+        */
+        scanf("%d",&re);
+        if(re==1)
+        {
+            run();
+        }
+        else
+        {
+            exit(0);
+        }
+    }
+    else
+    {
+        int flag = 0;
+        /*
+        flag to check if all 9 position are filled
+        if all positions are filled yet no one wins
+        than the game is draw
+        */
+        for(int i=0;i<3;i++)
+        {
+            for(int j=0;j<3;j++)
+            {
+                if((matrix[i][j]=='O')||(matrix[i][j]=='X'))
+                {
+                    flag++;
+                }
+            }
+        }
+        if(flag==9)
+        {
+            printf("\n----Draw---\n");
+            printf("__\n");
+
+        printf("\nEnter 1 to play AGAIN or any other number to exit:\n");
+        int re;
+        /*
+        To store the value and check user
+        want to play again or exit
+        */
+        scanf("%d",&re);
+        if(re==1)
+        {
+            run();
+        }
+        else
+        {
+            exit(0);
+        }
+        }
+    }
+}
+
+void rules()
+{
+    printf("\n-------Rules-------");
+    printf("\n-> Tic-Tac-Toe game is played on a 3x3 grid");
+    printf("\n   the game is played between two players who");
+    printf("\n   takes turns.");
+    printf("\n-> The first player marks moves with circle and");
+    printf("\n   the second with a cross.");
+    printf("\n-> The player has to form horizontal,vertical or");
+    printf("\n   diagonal sequence of three marks in order to ");
+    printf("\n   win the game.");
+    printf("\n-> You will be shown the grid with '.' and besides ");
+    printf("\n   and also the grid with will be marked with position");
+    printf("\n   you have to enter the position you want to mark.");
+    printf("\n-> As you mark the position '.' will become 'O' or 'X'");
+    printf("\n   based on your turn.");
+    printf("\n-> First player to mark 3 position in sequence will win.");
+    printf("\n-> If any of the player is unable to mark 3 sequence in row");
+    printf("\n   the game will be declared draw.");
+    printf("\n-------------------\n\n");
+    run();
+}
